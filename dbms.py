@@ -5,7 +5,6 @@ def add_data(table, data):
     # Adds data to table
     # table: name of table to add data to
     # data: list of values to add to table
-    # returns: True if successful, False if not
 
     # Connect to database
     conn = sqlite3.connect("database.db")
@@ -19,11 +18,9 @@ def add_data(table, data):
         conn.execute(sql_query)
         conn.commit()
         conn.close()
-        return True
     else:
         print("Error: All columns must have non-empty values for insertion.")
         conn.close()
-        return False
 
 def search(table, data):
     # Searches for data in table
@@ -56,3 +53,48 @@ def search(table, data):
     conn.close()
                 
     return columns, results, column_mask
+
+def delete(table, data):
+    # Deletes data from table
+    # table: name of table to delete data from
+    # data: dictionary of values to delete
+
+    # Connect to database
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    # Build the SQL query based on the search criteria
+    sql_query = f"DELETE FROM {table} WHERE 1=1"
+
+    for column, value_info in data.items():
+        value, use_exact_match = value_info
+
+        if value != "":
+            if use_exact_match:
+                sql_query += f" AND {column} = '{value}'"
+            else:
+                sql_query += f" AND {column} LIKE '%{value}%'"
+
+    # Execute the query and print the results
+    c.execute(sql_query)
+    conn.commit()
+    conn.close()
+
+def update(table, data, where):
+    # Updates data in table
+    # table: name of table to update data in
+    # data: dictionary of values to update
+    # where: list to search
+
+    # Connect to database
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    # Build the SQL query based on the where criteria
+    set_clause = ', '.join([f"{column} = '{value}'" for column, value in data.items()])
+    sql_query = f"UPDATE {table} SET {set_clause} WHERE {where[0]} = '{where[1]}'"
+
+    # Execute the query and print the results
+    c.execute(sql_query)
+    conn.commit()
+    conn.close()

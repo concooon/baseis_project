@@ -1,6 +1,7 @@
 import re
 import tkinter as tk
 from tkinter import ttk
+from tkcalendar import DateEntry
 
 class EnntryBox:
     def __init__(self, parent, row, col, width, settings, callback=None):
@@ -28,12 +29,25 @@ class EnntryBox:
             values = settings[-1] if isinstance(settings[-1], tuple) else []
             self.entry = ttk.Combobox(self.frame, values=values, state="readonly", width=width)
 
+        elif settings[3] == "date":
+            self.entry = DateEntry(self.frame, width=width, background='darkblue', foreground='white', borderwidth=2)
+
         # 2e. Add entry field and bind focus out event
         self.entry.pack(padx=5, pady=5, fill="x")
         self.entry.bind("<FocusOut>", self.lost_focus) # on focus out, validate data
 
+    def set_data(self, data):
+        # Sets entry field data and validates them
+        if f"{type(self.entry)}" == "<class 'tkinter.ttk.Combobox'>":
+            self.entry.set(data)
+        elif isinstance(self.entry, DateEntry):
+            self.entry.set_date(data)
+        elif isinstance(self.entry, ttk.Entry):
+            self.entry.delete(0, "end")
+            self.entry.insert(0, data)
+
     def lost_focus(self, event):
-        if self.validation == None or re.match(self.validation, self.entry.get()): #todo: not None validation
+        if self.validation == None or re.match(self.validation, self.entry.get()):
             # if data are valid, notify user
                         
             self.error_label.config(foreground="green")
@@ -55,7 +69,14 @@ class EnntryBox:
         self.callback(event)
 
     def reset(self):
+
         # Resets entry field, data and error label
-        self.entry.delete(0, "end")
+        if f"{type(self.entry)}" == "<class 'tkinter.ttk.Combobox'>":
+            self.entry.set("")
+        elif isinstance(self.entry, DateEntry):
+            self.entry.set_date(None)
+        elif isinstance(self.entry, ttk.Entry):
+            self.entry.delete(0, "end")
+
         self.error_label.config(text="")
         self.data = ""
