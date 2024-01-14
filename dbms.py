@@ -15,6 +15,8 @@ def add_data(table, data):
         values = ', '.join(f"'{value}'" for value in data.values())
         sql_query = f"INSERT INTO {table} ({columns}) VALUES ({values})"
 
+        print(sql_query)
+
         conn.execute(sql_query)
         conn.commit()
         conn.close()
@@ -35,18 +37,16 @@ def search(table, data):
     # Build the SQL query based on the search criteria
     sql_query = f"SELECT * FROM {table} WHERE 1=1"
 
-    for column, value_info in data.items():
-        value, use_exact_match = value_info
+    for column, value in data.items():
 
         if value != "":
-            if use_exact_match:
-                sql_query += f" AND {column} = '{value}'"
-            else:
-                sql_query += f" AND {column} LIKE '%{value}%'"
+            sql_query += f" AND {column} {value}"
+
+    print(sql_query)
 
     # create lists for displaying results
     columns = [col for col in data.keys()]
-    column_mask = [col for col in data.keys() if data[col][0] != ""]
+    column_mask = [col for col in data.keys() if data[col] != ""]
 
     # Execute the query and print the results
     results = c.execute(sql_query).fetchall()
@@ -66,14 +66,12 @@ def delete(table, data):
     # Build the SQL query based on the search criteria
     sql_query = f"DELETE FROM {table} WHERE 1=1"
 
-    for column, value_info in data.items():
-        value, use_exact_match = value_info
+    for column, value in data.items():
 
         if value != "":
-            if use_exact_match:
-                sql_query += f" AND {column} = '{value}'"
-            else:
-                sql_query += f" AND {column} LIKE '%{value}%'"
+            sql_query += f" AND {column} = '{value}'"
+    
+    print(sql_query)
 
     # Execute the query and print the results
     c.execute(sql_query)
@@ -93,6 +91,8 @@ def update(table, data, where):
     # Build the SQL query based on the where criteria
     set_clause = ', '.join([f"{column} = '{value}'" for column, value in data.items()])
     sql_query = f"UPDATE {table} SET {set_clause} WHERE {where[0]} = '{where[1]}'"
+
+    print(sql_query)
 
     # Execute the query and print the results
     c.execute(sql_query)

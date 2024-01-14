@@ -12,7 +12,7 @@ class DatabaseGUI:
         self.root.title("Εκδοτικός Οίκος")
 
         # Set window size and position (centered)
-        width = 1050
+        width = 1150
         height = 600
         self.root.geometry(f"{width}x{height}")
         screen_width = root.winfo_screenwidth()
@@ -183,6 +183,8 @@ class DatabaseGUI:
         # columns : list of columns of table
         # data : list of data to populate fields with
 
+        print(data)
+
         for i, column in enumerate(columns):
             self.entries[column[0]].set_data(data[i])
             self.entries[column[0]].callback = None
@@ -298,6 +300,8 @@ class DatabaseGUI:
         primary_key = list(self.entries.keys())[0]
         self.key = [primary_key, self.entries[primary_key].data]
 
+        print(self.key)
+
         for value in self.entries.values():
             if isinstance(value.entry, eb.DateEntry) or isinstance(value.entry, ttk.Combobox):
                 value.entry.config(state="readonly")
@@ -318,7 +322,16 @@ class DatabaseGUI:
     # ========================= Database functions =========================
     def search_data(self):
         #search entry data in database
-        new_dict = {key: (value.data, True) for key, value in self.entries.items()}
+        new_dict = {}
+        for key, value in self.entries.items():
+
+            if value.data == "":
+                new_dict[key] = ""
+            elif value.operator_var.get() == "~":
+                new_dict[key] = f"LIKE '%{value.data}%'"
+            else:
+                new_dict[key] = value.operator_var.get() + " '" + value.data + "'"
+        # new_dict = {key: value.data for key, value in self.entries.items()}
 
         # Get the currently selected tab which is the table name
         current_tab_index = self.tabs.index(self.tabs.select())
@@ -349,7 +362,7 @@ class DatabaseGUI:
 
     def delete_data(self):
         #delete entry data from database
-        new_dict = {key: (value.data, True) for key, value in self.entries.items()}
+        new_dict = {key: value.data for key, value in self.entries.items()}
 
         # Get the currently selected tab which is the table name
         current_tab_index = self.tabs.index(self.tabs.select())

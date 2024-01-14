@@ -48,6 +48,9 @@ class DisplayApp:
             complete_row = [self.rows[row_index][self.columns.index(col)] for col in self.columns]
             # print("Selected Row:", complete_row)
             self.root.destroy()
+
+            print(self.columns, self.rows[row_index])
+
             self.callback(complete_row)
             # return complete_row
 
