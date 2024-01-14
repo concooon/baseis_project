@@ -40,7 +40,7 @@ class DatabaseGUI:
         self.tables = {
             "Employee": [
                 ("AFM", "ΑΦΜ υπαλλήλλου (ακέραιος - 9 ψηφία)", r"^\d{9}$", "entry"),
-                ("Dno", "Κωδικός τμήματος (ακέραιος 1-10)", r"^[1-9]$", "entry"),
+                ("Dno", "Κωδικός τμήματος (ακέραιος 1-10)", r"^[1-9]$", "combobox", ("1", "2", "3", "4", "5", "6", "7", "8", "9")),
                 ("First_name", "Όνομα (αλφαριθμητικό)", r"^[A-Za-zΑ-ΩΆΈΉΊΌΎΏα-ωάέήίόύώ-]+$", "entry"),
                 ("Last_name", "Επώνυμο (αλφαριθμητικό)", r"^[A-Za-zΑ-ΩΆΈΉΊΌΎΏα-ωάέήίόύώ-]+$", "entry"),
                 ("Salary", "Μηνιαίος μισθός [€] (ακέραιος)", r"^\d+$", "entry"),
@@ -328,6 +328,8 @@ class DatabaseGUI:
         # query database
         columns, results, column_mask =  dbms.search(tab, new_dict)
 
+        self.reset()
+
         # Display results
         ds.DisplayApp(columns, results, column_mask, self.prepare).run()
 
@@ -343,6 +345,8 @@ class DatabaseGUI:
         # query database
         dbms.add_data(tab, new_dict)
 
+        self.reset()
+
     def delete_data(self):
         #delete entry data from database
         new_dict = {key: (value.data, True) for key, value in self.entries.items()}
@@ -355,6 +359,8 @@ class DatabaseGUI:
         # query database
         dbms.delete(tab, new_dict)
 
+        self.reset()
+
     def update_data(self):
         #update entry data in database
         new_dict = {key: value.data for key, value in self.entries.items()}
@@ -366,6 +372,8 @@ class DatabaseGUI:
 
         # query database
         dbms.update(tab, new_dict, self.key)
+
+        self.reset()
 
 
 
