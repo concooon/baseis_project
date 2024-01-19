@@ -7,7 +7,8 @@ def add_data(table, data):
     # data: list of values to add to table
 
     # Connect to database
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pub.db")
+
     
     if all(value != "" for value in data.values()):
         # Build the SQL query for insertion
@@ -31,7 +32,7 @@ def search(table, data):
     # returns: list of tuples containing results
 
     # Connect to database
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pub.db")
     c = conn.cursor()
 
     # Build the SQL query based on the search criteria
@@ -60,7 +61,7 @@ def delete(table, data):
     # data: dictionary of values to delete
 
     # Connect to database
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pub.db")
     c = conn.cursor()
 
     # Build the SQL query based on the search criteria
@@ -85,7 +86,7 @@ def update(table, data, where):
     # where: list to search
 
     # Connect to database
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pub.db")
     c = conn.cursor()
 
     # Build the SQL query based on the where criteria
