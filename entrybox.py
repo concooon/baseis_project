@@ -36,7 +36,7 @@ class EnntryBox:
             self.entry = ttk.Combobox(self.frame, values=values, state="readonly", width=width - 2)
 
         elif settings[3] == "date":
-            self.entry = DateEntry(self.frame, width=width - 2, background='darkblue', foreground='white', borderwidth=2)
+            self.entry = DateEntry(self.frame, date_pattern='yyyy-mm-dd', width=width - 2, background='darkblue', foreground='white', borderwidth=2)
 
         # 2f. Add entry field and bind focus out event
         self.entry.pack(side="right", padx=5, pady=5, fill="x", expand=True)
