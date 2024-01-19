@@ -8,6 +8,7 @@ def add_data(table, data):
 
     # Connect to database
     conn = sqlite3.connect("pub.db")
+
     
     if all(value != "" for value in data.values()):
         # Build the SQL query for insertion
